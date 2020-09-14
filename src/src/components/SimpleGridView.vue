@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import TableView from './components/TableView.vue'
+import TableView from './TableView.vue'
 
 export default {
   name: `SimpleGridView`,
@@ -32,24 +32,35 @@ export default {
             title: "Name",
             field: "name",
             slot: "commonpaddings"
-          }
+          },
         ],
-        items: [
-          {
-            id: "1",
-            name: "GDjhgjf"
-          },
-          {
-            id: "2",
-            name: "MUherka"
-          },
-          {
-            id: "3",
-            name: "Bluherka"
-          }
-        ]
+        isAutoLoadFirstPage: true,
+        loadStrategy: {
+          loadPage: this.loadPage,
+        },
+        items: []
       }
     }
+  },
+  methods: {
+    loadPage(pageNumber) {
+      if (pageNumber === 5000) return;
+
+      return [
+        {
+          id: "1",
+          name: "GDjhgjf"
+        },
+        {
+          id: "2",
+          name: "MUherka"
+        },
+        {
+          id: "3",
+          name: "Bluherka"
+        }
+      ];
+    }          
   },
   components: {
     TableView

@@ -119,6 +119,9 @@ export default {
       }
     }
   },
+  mounted() {
+    if (this.settings.isAutoLoadFirstPage) this.loadPage(1);
+  },
   methods: {
     getColumnSizes() {
       return this.visibleColumns.map(a => a.columnPoints && a.actualWidth ? `${a.actualWidth}${a.columnPoints}` : `1fr`).join(` `);
@@ -147,12 +150,32 @@ export default {
         cell.columnIndex === 0 ? theme.leftCellStyle : (cell.columnIndex === lastColumns ? theme.rightCellStyle : theme.middleCellStyle) 
       );
     },
-    loadPage(pageNumber) {
+    async loadPage(pageNumber) {
       if (!pageNumber) pageNumber = 1;
 
-      if (this.settings.loadStrategy) {
-        
+      if (!(`loadStrategy` in this.settings)) return;
+      if (!(`loadPage` in this.settings.loadStrategy)) {
+        console.warn(`Property 'loadPage' don't specify in settings.loadStrategy!`);
+        return [];
       }
+
+      const isAsync = this.settings.loadStrategy.isAsync;
+      const loadPage = this.settings.loadStrategy.loadPage;
+
+      let result = {};
+
+      if (isAsync) {
+        result = await loadPage(pageNumber);
+      } else {
+        result = loadPage(pageNumber);
+      }
+
+      if (!result) {
+        this.settings.items = [];
+        return;
+      }
+
+      this.settings.items = result;
     }
   },
   computed: {

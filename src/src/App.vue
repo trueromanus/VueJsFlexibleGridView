@@ -1,58 +1,15 @@
 <template>
-  <div id="app">    
-    <TableView
-      :settings="settings">
-      <div style="display: flex; align-items: center; padding: 18px; font-weight: bold;" slot="columnhead" slot-scope="{ column }">
-        {{ column.title }}
-      </div>
-      <div style="display: flex; align-items: center; padding: 18px;" slot="commonpaddings" slot-scope="{ item }">
-        {{ item.value }}
-      </div>
-    </TableView>
+  <div id="app">
+    <SimpleGridView></SimpleGridView>
   </div>
 </template>
 
 <script>
-import TableView from './components/TableView.vue'
+import SimpleGridView from './components/SimpleGridView.vue'
 
 export default {
-  name: `App`,
-  data() {
-    return {
-      settings: {
-        columns: [
-          {
-            field: "id",
-            title: "Identifier",
-            actualWidth: 100,
-            columnPoints: `px`,
-            slot: "commonpaddings"
-          },
-          {
-            title: "Name",
-            field: "name",
-            slot: "commonpaddings"
-          }
-        ],
-        items: [
-          {
-            id: "1",
-            name: "GDjhgjf"
-          },
-          {
-            id: "2",
-            name: "MUherka"
-          },
-          {
-            id: "3",
-            name: "Bluherka"
-          }
-        ]
-      }
-    }
-  },
   components: {
-    TableView
+    SimpleGridView
   }
 }
 </script>
