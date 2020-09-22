@@ -153,7 +153,10 @@ export default {
     async loadPage(pageNumber) {
       if (!pageNumber) pageNumber = 1;
 
-      if (!(`loadStrategy` in this.settings)) return;
+      if (!(`loadStrategy` in this.settings)) {
+        this.$emit(`pageloaded`, pageNumber);
+        return;
+      }
       if (!(`loadPage` in this.settings.loadStrategy)) {
         console.warn(`Property 'loadPage' don't specify in settings.loadStrategy!`);
         return [];
@@ -161,13 +164,14 @@ export default {
 
       const isAsync = this.settings.loadStrategy.isAsync;
       const loadPage = this.settings.loadStrategy.loadPage;
+      const metadata = this.settings.loadStrategy.metadata;
 
       let result = {};
 
       if (isAsync) {
-        result = await loadPage(pageNumber);
+        result = await loadPage(pageNumber, metadata);
       } else {
-        result = loadPage(pageNumber);
+        result = loadPage(pageNumber, metadata);
       }
 
       if (!result) {
@@ -176,6 +180,8 @@ export default {
       }
 
       this.settings.items = result;
+
+      this.$emit(`pageloaded`, pageNumber);
     }
   },
   computed: {
