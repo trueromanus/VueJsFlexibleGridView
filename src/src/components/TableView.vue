@@ -165,6 +165,7 @@ export default {
       const isAsync = this.settings.loadStrategy.isAsync;
       const loadPage = this.settings.loadStrategy.loadPage;
       const metadata = this.settings.loadStrategy.metadata;
+      const preprocess = this.settings.loadStrategy.preprocess;
 
       let result = {};
 
@@ -179,7 +180,7 @@ export default {
         return;
       }
 
-      this.settings.items = result;
+      this.settings.items = preprocess ? preprocess(result) : result;
 
       this.$emit(`pageloaded`, pageNumber);
     }
