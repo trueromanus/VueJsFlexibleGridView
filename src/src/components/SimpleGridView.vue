@@ -87,10 +87,10 @@ export default {
       const pageSize = this.settings.loadStrategy.metadata.pageSize;
       const countPages = Math.ceil(count / pageSize);
 
-      const paginationPages = pageNumber === 1 ? [pageNumber] : [pageNumber - 1, pageNumber];
-      
-      if (pageNumber + 1 <= countPages) paginationPages.push(pageNumber + 1);
-      if (pageNumber === 1 && pageNumber + 2 <= countPages) paginationPages.push(pageNumber + 2);
+      const paginationPages = [];
+      for (let i = pageNumber; i > 0; i--) paginationPages.unshift(i);
+      for (let i = pageNumber + 1; i <= countPages; i++) paginationPages.push(i);
+
       this.paginationPages = paginationPages;
     },
     loadPage(pageNumber, metadata) {
