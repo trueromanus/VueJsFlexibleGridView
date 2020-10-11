@@ -4,10 +4,16 @@
       ref="tableView"
       :settings="settings"
       @pageloaded="pageLoaded($event)">
-      <div style="display: flex; align-items: center; padding: 18px; font-weight: bold;" slot="columnhead" slot-scope="{ column }">
+      <div
+        class="column-head"
+        slot="columnhead"
+        slot-scope="{ column }">
         {{ column.title }}
       </div>
-      <div style="display: flex; align-items: center; padding: 18px;" slot="commonpaddings" slot-scope="{ item }">
+      <div
+        class="column-cell"
+        slot="commonpaddings"
+        slot-scope="{ item }">
         {{ item.value }}
       </div>
     </table-view>
@@ -82,7 +88,7 @@ export default {
       const countPages = Math.ceil(count / pageSize);
 
       const paginationPages = pageNumber === 1 ? [pageNumber] : [pageNumber - 1, pageNumber];
-      console.log(paginationPages);
+      
       if (pageNumber + 1 <= countPages) paginationPages.push(pageNumber + 1);
       if (pageNumber === 1 && pageNumber + 2 <= countPages) paginationPages.push(pageNumber + 2);
       this.paginationPages = paginationPages;
@@ -137,8 +143,19 @@ export default {
   border-color: rgb(186, 191, 199);
   widows: 100%;
 }
-.pagesize > *{
+.pagesize > * {
   width: 100%;
   margin-left: 8px;
+}
+.column-head {
+  display: flex;
+  align-items: center;
+  padding: 18px;
+  font-weight: bold;
+}
+.column-cell {
+  display: flex;
+  align-items: center;
+  padding: 18px;
 }
 </style>
