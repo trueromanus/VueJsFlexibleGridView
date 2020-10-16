@@ -28,7 +28,7 @@
       <paginator
         :displayPages="paginationPages"
         :selectedPage="currentPage"
-        @changepage="$refs.tableView.loadPage($event)"
+        @changepage="pageSelected($event)"
       />
     </div>
   </div>
@@ -80,17 +80,53 @@ export default {
     }
   },
   methods: {
-    pageLoaded(pageNumber) {
-      this.currentPage = pageNumber;
-      
+    pageSelected($event){
       const count = this.items.length;
       const pageSize = this.settings.loadStrategy.metadata.pageSize;
       const countPages = Math.ceil(count / pageSize);
 
-      const paginationPages = [];
-      for (let i = pageNumber; i > 0; i--) paginationPages.unshift(i);
-      for (let i = pageNumber + 1; i <= countPages; i++) paginationPages.push(i);
+      switch($event)  {
+        case `<<`: $event = 1; break;
+        case `<`: $event = this.currentPage - 1; break;
+        case `>`: $event = this.currentPage + 1; break;
+        case `>>`: $event = countPages; break;
+        default: break;
+      }
+      
+      this.$refs.tableView.loadPage($event)
+    },
+    pageLoaded(pageNumber) {
+      const count = this.items.length;
+      const pageSize = this.settings.loadStrategy.metadata.pageSize;
+      const countPages = Math.ceil(count / pageSize);
+      this.currentPage = pageNumber;
 
+      const paginationPages = [];
+      if (!countPages) return paginationPages;
+
+      const pagesBufferSize = 2;
+
+      if (countPages <= pagesBufferSize * 2 + 1) {
+        for (let i = 1; i <= countPages; i++) paginationPages.push(i);
+      } else {
+        let startPage = this.currentPage - pagesBufferSize;
+        if (startPage < 1) startPage = 1;
+
+        if (startPage > 1) {
+          paginationPages.push(`<<`);
+          paginationPages.push(`<`);
+        }
+
+        for (let i = 0; i < pagesBufferSize * 2 + 1; i++) {
+          if (startPage + i > countPages) break;
+          paginationPages.push(startPage + i);
+        }
+        
+        if (startPage + pagesBufferSize + 1 < countPages - 1) {
+          paginationPages.push(`>`);
+          paginationPages.push(`>>`);
+        }
+      }
       this.paginationPages = paginationPages;
     },
     loadPage(pageNumber, metadata) {
