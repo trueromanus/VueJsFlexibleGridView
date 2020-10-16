@@ -164,10 +164,13 @@ export default {
 
       const isAsync = this.settings.loadStrategy.isAsync;
       const loadPage = this.settings.loadStrategy.loadPage;
+      const pageFormatter = this.settings.loadStrategy.pageFormatter;
       const metadata = this.settings.loadStrategy.metadata;
       const preprocess = this.settings.loadStrategy.preprocess;
 
       let result = {};
+
+      if (pageFormatter) pageNumber = pageFormatter(pageNumber, metadata); // it need for features like aliases (as instance `latest`, `first`, `next` etc)
 
       if (isAsync) {
         result = await loadPage(pageNumber, metadata);

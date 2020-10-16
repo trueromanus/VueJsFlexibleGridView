@@ -70,6 +70,7 @@ export default {
         isAutoLoadFirstPage: true,
         loadStrategy: {
           loadPage: this.loadPage,
+          pageFormatter: this.pageFormatter,
           metadata: {
             pageSize: 10
           }
@@ -80,20 +81,29 @@ export default {
     }
   },
   methods: {
-    pageSelected($event){
+    pageSelected($event){     
+      this.$refs.tableView.loadPage($event);
+    },
+    pageFormatter(pageNumber, metadata) {
       const count = this.items.length;
-      const pageSize = this.settings.loadStrategy.metadata.pageSize;
-      const countPages = Math.ceil(count / pageSize);
+      const pageSize = metadata.pageSize;
 
-      switch($event)  {
-        case `<<`: $event = 1; break;
-        case `<`: $event = this.currentPage - 1; break;
-        case `>`: $event = this.currentPage + 1; break;
-        case `>>`: $event = countPages; break;
-        default: break;
-      }
-      
-      this.$refs.tableView.loadPage($event)
+      switch(pageNumber)  {
+        case `<<`:
+        case `first`:
+          return 1;
+        case `<`:
+        case `previous`:
+          return this.currentPage - 1;
+        case `>`:
+        case `next`:
+          return this.currentPage + 1;
+        case `>>`:
+        case `last`:
+          return Math.ceil(count / pageSize);
+        default:
+          return pageNumber;
+     }
     },
     pageLoaded(pageNumber) {
       const count = this.items.length;
@@ -130,9 +140,10 @@ export default {
       this.paginationPages = paginationPages;
     },
     loadPage(pageNumber, metadata) {
-      const startIndex = (pageNumber - 1) * metadata.pageSize;
-      const pageSize = metadata.pageSize;
       const count = this.items.length;
+      const pageSize = metadata.pageSize;
+
+      const startIndex = (pageNumber - 1) * metadata.pageSize;
       const pageItemsCount = count - startIndex > pageSize ? pageSize : count - startIndex;
 
       if (startIndex > count) return [];
