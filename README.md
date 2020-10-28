@@ -1,2 +1,2 @@
-# Vue.js FlexibleGridView
-Flexible GridView component set for Vue.js 2
+# FlexGridView
+FlexGridView is component set for Vue.js 2 help you easily create you own unique gridview
