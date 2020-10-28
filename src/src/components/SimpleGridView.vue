@@ -3,7 +3,7 @@
     <table-view
       ref="tableView"
       :settings="settings"
-      @pageloaded="pageLoaded($event)">
+      @pageloaded="getPaginationPages($event)">
       <div
         class="column-head"
         slot="columnhead"
@@ -37,6 +37,7 @@
 <script>
 import TableView from './TableView.vue'
 import Paginator from './Paginator.vue'
+import PaginatorMixin from '../mixins/paginatorMixin.js'
 
 export default {
   name: `SimpleGridView`,
@@ -84,63 +85,9 @@ export default {
     pageSelected($event){     
       this.$refs.tableView.loadPage($event);
     },
-    pageFormatter(pageNumber, metadata) {
-      const count = this.items.length;
-      const pageSize = metadata.pageSize;
-
-      switch(pageNumber)  {
-        case `<<`:
-        case `first`:
-          return 1;
-        case `<`:
-        case `previous`:
-          return this.currentPage - 1;
-        case `>`:
-        case `next`:
-          return this.currentPage + 1;
-        case `>>`:
-        case `last`:
-          return Math.ceil(count / pageSize);
-        default:
-          return pageNumber;
-     }
-    },
-    pageLoaded(pageNumber) {
-      const count = this.items.length;
-      const pageSize = this.settings.loadStrategy.metadata.pageSize;
-      const countPages = Math.ceil(count / pageSize);
-      this.currentPage = pageNumber;
-
-      const paginationPages = [];
-      if (!countPages) return paginationPages;
-
-      const pagesBufferSize = 2;
-
-      if (countPages <= pagesBufferSize * 2 + 1) {
-        for (let i = 1; i <= countPages; i++) paginationPages.push(i);
-      } else {
-        let startPage = this.currentPage - pagesBufferSize;
-        if (startPage < 1) startPage = 1;
-
-        if (startPage > 1) {
-          paginationPages.push(`<<`);
-          paginationPages.push(`<`);
-        }
-
-        for (let i = 0; i < pagesBufferSize * 2 + 1; i++) {
-          if (startPage + i > countPages) break;
-          paginationPages.push(startPage + i);
-        }
-        
-        if (startPage + pagesBufferSize + 1 < countPages - 1) {
-          paginationPages.push(`>`);
-          paginationPages.push(`>>`);
-        }
-      }
-      this.paginationPages = paginationPages;
-    },
     loadPage(pageNumber, metadata) {
-      const count = this.items.length;
+      metadata.totalCount = this.items.length;
+      const count = metadata.totalCount;
       const pageSize = metadata.pageSize;
 
       const startIndex = (pageNumber - 1) * metadata.pageSize;
@@ -160,6 +107,7 @@ export default {
       this.$refs.tableView.loadPage(1);
     }
   },
+  mixins: [PaginatorMixin],
   components: {
     TableView,
     Paginator
@@ -167,7 +115,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .simple-table-container {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   text-align: center;

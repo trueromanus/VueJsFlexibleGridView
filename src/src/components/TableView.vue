@@ -154,7 +154,7 @@ export default {
       if (!pageNumber) pageNumber = 1;
 
       if (!(`loadStrategy` in this.settings)) {
-        this.$emit(`pageloaded`, pageNumber);
+        this.$emit(`pageloaded`, { pageNumber });
         return;
       }
       if (!(`loadPage` in this.settings.loadStrategy)) {
@@ -185,7 +185,7 @@ export default {
 
       this.settings.items = preprocess ? preprocess(result) : result;
 
-      this.$emit(`pageloaded`, pageNumber);
+      this.$emit(`pageloaded`, { pageNumber, metadata });
     }
   },
   computed: {
