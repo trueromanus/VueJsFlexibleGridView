@@ -3,7 +3,7 @@
     <table-view
       ref="tableView"
       :settings="settings"
-      @pageloaded="pageLoaded($event)">
+      @pageloaded="getPaginationPages($event)">
       <div style="display: flex; align-items: center; padding: 18px; font-weight: bold;" slot="columnhead" slot-scope="{ column }">
         {{ column.title }}
       </div>
@@ -31,6 +31,7 @@
 <script>
 import TableView from './TableView.vue'
 import Paginator from './Paginator.vue'
+import PaginatorMixin from '../mixins/paginatorMixin.js'
 
 export default {
   name: `SimpleGridView`,
@@ -44,7 +45,7 @@ export default {
     return {
       paginationPages: [],
       currentPage: 1,
-      selectedPageSize: 10,
+      selectedPageSize: 5,
       pageSizes: [5, 10, 15, 20],
       settings: {
         columns: [
@@ -57,45 +58,31 @@ export default {
           },
           {
             title: "Name",
-            field: "name",
+            field: "title",
             slot: "commonpaddings"
           },
         ],
         isAutoLoadFirstPage: true,
         loadStrategy: {
+          isAsync: true,
           loadPage: this.loadPage,
+          pageFormatter: this.pageFormatter,
           metadata: {
-            pageSize: 10
+            pageSize: 5
           }
         },
-        items: [
-        ]
+        items: []
       }
     }
   },
   methods: {
-    pageLoaded(pageNumber) {
-      this.currentPage = pageNumber;
-      
-      const count = this.items.length;
-      const pageSize = this.settings.loadStrategy.metadata.pageSize;
-      const countPages = Math.ceil(count / pageSize);
+    async loadPage(pageNumber, metadata) {
+      const result = await fetch(`https://trueromanus.github.io/VueJsFlexibleGridView/fakeapi/page${pageNumber}.json`);
+      const pageData = await result.json();
+      console.log(pageData);
 
-      const paginationPages = pageNumber === 1 ? [pageNumber] : [pageNumber - 1, pageNumber];
-      console.log(paginationPages);
-      if (pageNumber + 1 <= countPages) paginationPages.push(pageNumber + 1);
-      if (pageNumber === 1 && pageNumber + 2 <= countPages) paginationPages.push(pageNumber + 2);
-      this.paginationPages = paginationPages;
-    },
-    loadPage(pageNumber, metadata) {
-      const startIndex = (pageNumber - 1) * metadata.pageSize;
-      const pageSize = metadata.pageSize;
-      const count = this.items.length;
-      const pageItemsCount = count - startIndex > pageSize ? pageSize : count - startIndex;
-
-      if (startIndex > count) return [];
-
-      return this.items.slice(startIndex, startIndex + pageItemsCount);
+      metadata.totalCount = pageData.count;
+      return pageData.items;
     }
   },
   watch: {
@@ -107,6 +94,7 @@ export default {
       this.$refs.tableView.loadPage(1);
     }
   },
+  mixins: [PaginatorMixin],
   components: {
     TableView,
     Paginator

@@ -3,11 +3,14 @@
     <SimpleGridView
       :items="items"
     />
+    <SimpleBackendGridView
+    />
   </div>
 </template>
 
 <script>
 import SimpleGridView from './components/SimpleGridView.vue'
+import SimpleBackendGridView from './components/SimpleBackendGridView.vue'
 
 export default {
   data() {
@@ -326,7 +329,8 @@ export default {
     }
   },
   components: {
-    SimpleGridView
+    SimpleGridView,
+    SimpleBackendGridView
   }
 }
 </script>

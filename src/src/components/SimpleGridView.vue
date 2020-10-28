@@ -28,7 +28,7 @@
       <paginator
         :displayPages="paginationPages"
         :selectedPage="currentPage"
-        @changepage="pageSelected($event)"
+        @changepage="$refs.tableView.loadPage($event)"
       />
     </div>
   </div>
@@ -76,15 +76,11 @@ export default {
             pageSize: 10
           }
         },
-        items: [
-        ]
+        items: []
       }
     }
   },
   methods: {
-    pageSelected($event){     
-      this.$refs.tableView.loadPage($event);
-    },
     loadPage(pageNumber, metadata) {
       metadata.totalCount = this.items.length;
       const count = metadata.totalCount;
