@@ -34,7 +34,7 @@ import Paginator from './Paginator.vue'
 import PaginatorMixin from '../mixins/paginatorMixin.js'
 
 export default {
-  name: `SimpleGridView`,
+  name: `SimpleBackendGridView`,
   props: {
     items: {
       type: Array,
@@ -102,7 +102,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .simple-table-container {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   text-align: center;

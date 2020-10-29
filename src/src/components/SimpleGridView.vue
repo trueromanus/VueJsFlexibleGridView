@@ -45,6 +45,10 @@ export default {
     items: {
       type: Array,
       default: () => []
+    },
+    columns: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -54,20 +58,7 @@ export default {
       selectedPageSize: 10,
       pageSizes: [5, 10, 15, 20],
       settings: {
-        columns: [
-          {
-            field: "id",
-            title: "Identifier",
-            actualWidth: 100,
-            columnPoints: `px`,
-            slot: "commonpaddings"
-          },
-          {
-            title: "Name",
-            field: "name",
-            slot: "commonpaddings"
-          },
-        ],
+        columns: [],
         isAutoLoadFirstPage: true,
         loadStrategy: {
           loadPage: this.loadPage,
@@ -80,7 +71,13 @@ export default {
       }
     }
   },
+  created() {
+    this.refreshColumns(this.columns);
+  },
   methods: {
+    refreshColumns(columns) {
+      this.settings.columns = columns;
+    },
     loadPage(pageNumber, metadata) {
       metadata.totalCount = this.items.length;
       const count = metadata.totalCount;
@@ -101,6 +98,9 @@ export default {
 
       this.settings.loadStrategy.metadata.pageSize = value;
       this.$refs.tableView.loadPage(1);
+    },
+    columns(value) {      
+      this.refreshColumns(value);
     }
   },
   mixins: [PaginatorMixin],

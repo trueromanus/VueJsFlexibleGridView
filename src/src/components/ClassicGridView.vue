@@ -3,11 +3,22 @@
     <table-view
       ref="tableView"
       :settings="settings"
-      @pageloaded="pageLoaded($event)">
-      <div style="display: flex; align-items: center; padding: 18px; font-weight: bold;" slot="columnhead" slot-scope="{ column }">
-        {{ column.title }}
+      @pageloaded="getPaginationPages($event)">
+      <div
+        class="column-head"
+        slot="columnhead"
+        slot-scope="{ column }"
+        @click="toggleSorting(column.field)">
+        <span>{{ column.title }}</span>
+        <div v-if="sortingFields[column.field]">
+          <span v-if="sortingFields[column.field].descending">&#8593;</span>
+          <span v-else>&#8595;</span>
+        </div>
       </div>
-      <div style="display: flex; align-items: center; padding: 18px;" slot="commonpaddings" slot-scope="{ item }">
+      <div
+        class="column-cell"
+        slot="commonpaddings"
+        slot-scope="{ item }">
         {{ item.value }}
       </div>
     </table-view>
@@ -31,11 +42,16 @@
 <script>
 import TableView from './TableView.vue'
 import Paginator from './Paginator.vue'
+import PaginatorMixin from '../mixins/paginatorMixin.js'
 
 export default {
-  name: `SimpleGridView`,
+  name: `ClassicGridView`,
   props: {
     items: {
+      type: Array,
+      default: () => []
+    },
+    columns: {
       type: Array,
       default: () => []
     }
@@ -47,53 +63,53 @@ export default {
       selectedPageSize: 10,
       pageSizes: [5, 10, 15, 20],
       settings: {
-        columns: [
-          {
-            field: "id",
-            title: "Identifier",
-            actualWidth: 100,
-            columnPoints: `px`,
-            slot: "commonpaddings"
-          },
-          {
-            title: "Name",
-            field: "name",
-            slot: "commonpaddings"
-          },
-        ],
+        columns: [],
         isAutoLoadFirstPage: true,
         loadStrategy: {
           loadPage: this.loadPage,
+          pageFormatter: this.pageFormatter,
           metadata: {
             pageSize: 10
           }
         },
-        items: [
-        ]
-      }
+        items: []
+      },
+      sortingFields: {}
     }
   },
+  created() {
+    this.refreshColumns(this.columns);
+  },
   methods: {
-    pageLoaded(pageNumber) {
-      this.currentPage = pageNumber;
-      
-      const count = this.items.length;
-      const pageSize = this.settings.loadStrategy.metadata.pageSize;
-      const countPages = Math.ceil(count / pageSize);
+    refreshColumns(columns) {
+      this.settings.columns = columns;
+    },
+    toggleSorting(columnField) {
+      const sortingFields = this.sortingFields;
+      if (sortingFields[columnField]) {
+        const sortingField = sortingFields[columnField];
+        let newValue = null;
+        if (!sortingField.descending) {
+          sortingField.descending = true;
+          newValue = sortingField;
+        }
 
-      const paginationPages = pageNumber === 1 ? [pageNumber] : [pageNumber - 1, pageNumber];
-      console.log(paginationPages);
-      if (pageNumber + 1 <= countPages) paginationPages.push(pageNumber + 1);
-      if (pageNumber === 1 && pageNumber + 2 <= countPages) paginationPages.push(pageNumber + 2);
-      this.paginationPages = paginationPages;
+        this.$set(this.sortingFields, columnField, newValue);
+      } else {
+        this.$set(this.sortingFields, columnField, { descending: false });
+      }
     },
     loadPage(pageNumber, metadata) {
-      const startIndex = (pageNumber - 1) * metadata.pageSize;
+      metadata.totalCount = this.items.length;
+      const count = metadata.totalCount;
       const pageSize = metadata.pageSize;
-      const count = this.items.length;
+
+      const startIndex = (pageNumber - 1) * metadata.pageSize;
       const pageItemsCount = count - startIndex > pageSize ? pageSize : count - startIndex;
 
       if (startIndex > count) return [];
+
+      //TODO: sorting items
 
       return this.items.slice(startIndex, startIndex + pageItemsCount);
     }
@@ -105,8 +121,17 @@ export default {
 
       this.settings.loadStrategy.metadata.pageSize = value;
       this.$refs.tableView.loadPage(1);
+    },
+    columns(value) {      
+      this.refreshColumns(value);
     }
   },
+  computed: {
+    gridMetadata() {
+      return this.settings.loadStrategy.metadata;
+    }
+  },
+  mixins: [PaginatorMixin],
   components: {
     TableView,
     Paginator
@@ -114,11 +139,10 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .simple-table-container {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
-  margin-top: 60px;
   width: 500px;  
 }
 .separator {
@@ -137,8 +161,23 @@ export default {
   border-color: rgb(186, 191, 199);
   widows: 100%;
 }
-.pagesize > *{
+.pagesize > * {
   width: 100%;
   margin-left: 8px;
+}
+.column-head {
+  display: flex;
+  align-items: center;
+  padding: 18px;
+  font-weight: bold;
+  user-select: none;
+}
+.column-head > *:first-child {
+  flex: 1;
+}
+.column-cell {
+  display: flex;
+  align-items: center;
+  padding: 18px;
 }
 </style>

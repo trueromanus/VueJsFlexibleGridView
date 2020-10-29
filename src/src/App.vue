@@ -1,16 +1,25 @@
 <template>
   <div id="app">
-    <SimpleGridView
+    <span>SimpleGridView, data can be on frontend completely. Only pagination and selecting page sizes.</span>
+    <simple-grid-view
       :items="items"
+      :columns="simpleColumns"
     />
-    <SimpleBackendGridView
+    <span>SimpleBackendGridView, data loaded from backend. Only pagination and selecting page sizes.</span>
+    <simple-backend-grid-view
     />
+    <span>ClassicGridView, data can be on frontend completely. Pagination, select page size, multi sorting, multi filtering.</span>
+    <classic-grid-view
+      :items="items"
+      :columns="simpleColumns">
+    </classic-grid-view>
   </div>
 </template>
 
 <script>
 import SimpleGridView from './components/SimpleGridView.vue'
 import SimpleBackendGridView from './components/SimpleBackendGridView.vue'
+import ClassicGridView from './components/ClassicGridView.vue'
 
 export default {
   data() {
@@ -325,12 +334,27 @@ export default {
           name: "Bluherka"
         },
         
-      ]       
+      ],
+      simpleColumns: [
+        {
+          field: "id",
+          title: "Identifier",
+          actualWidth: 130,
+          columnPoints: `px`,
+          slot: "commonpaddings"
+        },
+        {
+          title: "Name",
+          field: "name",
+          slot: "commonpaddings"
+        }
+      ]
     }
   },
   components: {
     SimpleGridView,
-    SimpleBackendGridView
+    SimpleBackendGridView,
+    ClassicGridView
   }
 }
 </script>
