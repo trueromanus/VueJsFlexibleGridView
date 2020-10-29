@@ -1,7 +1,6 @@
 export default {
     methods: {
         pageFormatter(pageNumber, metadata) {
-            const count = this.items.length;
             const pageSize = metadata.pageSize;
       
             switch(pageNumber)  {
@@ -16,7 +15,7 @@ export default {
                 return this.currentPage + 1;
               case `>>`:
               case `last`:
-                return Math.ceil(count / pageSize);
+                return Math.ceil(metadata.totalCount / pageSize);
               default:
                 return pageNumber;
            }
