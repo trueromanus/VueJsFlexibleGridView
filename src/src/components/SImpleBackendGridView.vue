@@ -79,7 +79,6 @@ export default {
     async loadPage(pageNumber, metadata) {
       const result = await fetch(`https://trueromanus.github.io/VueJsFlexibleGridView/fakeapi/page${pageNumber}.json`);
       const pageData = await result.json();
-      console.log(pageData);
 
       metadata.totalCount = pageData.count;
       return pageData.items;

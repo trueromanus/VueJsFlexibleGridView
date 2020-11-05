@@ -26,311 +26,311 @@ export default {
     return {
       items: [
         {
-          id: "1",
-          name: "GDjhgjf"
+          id: 1,
+          name: "Grovel"
         },
         {
-          id: "2",
+          id: 2,
+          name: "Muher"
+        },
+        {
+          id: 3,
+          name: "Bluher"
+        },
+        {
+          id: 4,
+          name: "Lapahuher"
+        },
+        {
+          id: 5,
+          name: "Grovel"
+        },
+        {
+          id: 6,
           name: "MUherka"
         },
         {
-          id: "3",
+          id: 7,
           name: "Bluherka"
         },
         {
-          id: "4",
+          id: 8,
+          name: "Grovel"
+        },
+        {
+          id: 9,
+          name: "MUherka"
+        },
+        {
+          id: 10,
+          name: "Bluherka"
+        },
+        {
+          id: 11,
+          name: "Bluherka"
+        },
+        {
+          id: 1,
+          name: "Grovel"
+        },
+        {
+          id: 2,
+          name: "MUherka"
+        },
+        {
+          id: 3,
+          name: "Bluherka"
+        },
+        {
+          id: 4,
           name: "Lapahuherka"
         },
         {
-          id: "5",
-          name: "GDjhgjf"
+          id: 5,
+          name: "Grovel"
         },
         {
-          id: "6",
+          id: 6,
           name: "MUherka"
         },
         {
-          id: "7",
+          id: 7,
           name: "Bluherka"
         },
         {
-          id: "8",
-          name: "GDjhgjf"
+          id: 8,
+          name: "Grovel"
         },
         {
-          id: "9",
+          id: 9,
           name: "MUherka"
         },
         {
-          id: "10",
+          id: 10,
           name: "Bluherka"
         },
         {
-          id: "11",
+          id: 11,
           name: "Bluherka"
         },
         {
-          id: "1",
-          name: "GDjhgjf"
+          id: 1,
+          name: "Grovel"
         },
         {
-          id: "2",
+          id: 2,
           name: "MUherka"
         },
         {
-          id: "3",
+          id: 3,
           name: "Bluherka"
         },
         {
-          id: "4",
+          id: 4,
           name: "Lapahuherka"
         },
         {
-          id: "5",
-          name: "GDjhgjf"
+          id: 5,
+          name: "Grovel"
         },
         {
-          id: "6",
+          id: 6,
           name: "MUherka"
         },
         {
-          id: "7",
+          id: 7,
           name: "Bluherka"
         },
         {
-          id: "8",
-          name: "GDjhgjf"
+          id: 8,
+          name: "Grovel"
         },
         {
-          id: "9",
+          id: 9,
           name: "MUherka"
         },
         {
-          id: "10",
+          id: 10,
           name: "Bluherka"
         },
         {
-          id: "11",
+          id: 11,
           name: "Bluherka"
         },
         {
-          id: "1",
-          name: "GDjhgjf"
+          id: 1,
+          name: "Grovel"
         },
         {
-          id: "2",
+          id: 2,
           name: "MUherka"
         },
         {
-          id: "3",
+          id: 3,
           name: "Bluherka"
         },
         {
-          id: "4",
+          id: 4,
           name: "Lapahuherka"
         },
         {
-          id: "5",
-          name: "GDjhgjf"
+          id: 5,
+          name: "Grovel"
         },
         {
-          id: "6",
+          id: 6,
           name: "MUherka"
         },
         {
-          id: "7",
+          id: 7,
           name: "Bluherka"
         },
         {
-          id: "8",
-          name: "GDjhgjf"
+          id: 8,
+          name: "Grovel"
         },
         {
-          id: "9",
+          id: 9,
           name: "MUherka"
         },
         {
-          id: "10",
+          id: 10,
           name: "Bluherka"
         },
         {
-          id: "11",
+          id: 11,
           name: "Bluherka"
         },
         {
-          id: "1",
-          name: "GDjhgjf"
+          id: 1,
+          name: "Grovel"
         },
         {
-          id: "2",
+          id: 2,
           name: "MUherka"
         },
         {
-          id: "3",
+          id: 3,
           name: "Bluherka"
         },
         {
-          id: "4",
+          id: 4,
           name: "Lapahuherka"
         },
         {
-          id: "5",
-          name: "GDjhgjf"
+          id: 5,
+          name: "Grovel"
         },
         {
-          id: "6",
+          id: 6,
           name: "MUherka"
         },
         {
-          id: "7",
+          id: 7,
           name: "Bluherka"
         },
         {
-          id: "8",
-          name: "GDjhgjf"
+          id: 8,
+          name: "Grovel"
         },
         {
-          id: "9",
+          id: 9,
           name: "MUherka"
         },
         {
-          id: "10",
+          id: 10,
           name: "Bluherka"
         },
         {
-          id: "11",
+          id: 11,
           name: "Bluherka"
         },
         {
-          id: "1",
-          name: "GDjhgjf"
+          id: 1,
+          name: "Grovel"
         },
         {
-          id: "2",
+          id: 2,
           name: "MUherka"
         },
         {
-          id: "3",
+          id: 3,
           name: "Bluherka"
         },
         {
-          id: "4",
+          id: 4,
           name: "Lapahuherka"
         },
         {
-          id: "5",
-          name: "GDjhgjf"
+          id: 5,
+          name: "Grovel"
         },
         {
-          id: "6",
+          id: 6,
           name: "MUherka"
         },
         {
-          id: "7",
+          id: 7,
           name: "Bluherka"
         },
         {
-          id: "8",
-          name: "GDjhgjf"
+          id: 8,
+          name: "Grovel"
         },
         {
-          id: "9",
+          id: 9,
           name: "MUherka"
         },
         {
-          id: "10",
+          id: 10,
           name: "Bluherka"
         },
         {
-          id: "11",
+          id: 11,
           name: "Bluherka"
         },
         {
-          id: "1",
-          name: "GDjhgjf"
+          id: 1,
+          name: "Grovel"
         },
         {
-          id: "2",
+          id: 2,
           name: "MUherka"
         },
         {
-          id: "3",
+          id: 3,
           name: "Bluherka"
         },
         {
-          id: "4",
+          id: 4,
           name: "Lapahuherka"
         },
         {
-          id: "5",
-          name: "GDjhgjf"
+          id: 5,
+          name: "Grovel"
         },
         {
-          id: "6",
+          id: 6,
           name: "MUherka"
         },
         {
-          id: "7",
+          id: 7,
           name: "Bluherka"
         },
         {
-          id: "8",
-          name: "GDjhgjf"
+          id: 8,
+          name: "Grovel"
         },
         {
-          id: "9",
+          id: 9,
           name: "MUherka"
         },
         {
-          id: "10",
+          id: 10,
           name: "Bluherka"
         },
         {
-          id: "11",
-          name: "Bluherka"
-        },
-        {
-          id: "1",
-          name: "GDjhgjf"
-        },
-        {
-          id: "2",
-          name: "MUherka"
-        },
-        {
-          id: "3",
-          name: "Bluherka"
-        },
-        {
-          id: "4",
-          name: "Lapahuherka"
-        },
-        {
-          id: "5",
-          name: "GDjhgjf"
-        },
-        {
-          id: "6",
-          name: "MUherka"
-        },
-        {
-          id: "7",
-          name: "Bluherka"
-        },
-        {
-          id: "8",
-          name: "GDjhgjf"
-        },
-        {
-          id: "9",
-          name: "MUherka"
-        },
-        {
-          id: "10",
-          name: "Bluherka"
-        },
-        {
-          id: "11",
+          id: 11,
           name: "Bluherka"
         },
         

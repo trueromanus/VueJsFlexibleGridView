@@ -43,6 +43,7 @@
 import TableView from './TableView.vue'
 import Paginator from './Paginator.vue'
 import PaginatorMixin from '../mixins/paginatorMixin.js'
+import SortingMixin from '../mixins/sortingMixin.js'
 
 export default {
   name: `ClassicGridView`,
@@ -92,15 +93,23 @@ export default {
         if (!sortingField.descending) {
           sortingField.descending = true;
           newValue = sortingField;
+          
+          this.$set(this.sortingFields, columnField, newValue);
+        } else {
+          delete sortingFields[columnField];
         }
-
-        this.$set(this.sortingFields, columnField, newValue);
       } else {
         this.$set(this.sortingFields, columnField, { descending: false });
       }
+
+      this.$refs.tableView.loadPage(1);
     },
     loadPage(pageNumber, metadata) {
-      metadata.totalCount = this.items.length;
+      let items = this.items;
+      console.log(this.sortingFields);
+      if (Object.keys(this.sortingFields).length) items = this.sortingObjectByMultipleField(items, this.sortingFields);
+
+      metadata.totalCount = items.length;
       const count = metadata.totalCount;
       const pageSize = metadata.pageSize;
 
@@ -109,9 +118,7 @@ export default {
 
       if (startIndex > count) return [];
 
-      //TODO: sorting items
-
-      return this.items.slice(startIndex, startIndex + pageItemsCount);
+      return items.slice(startIndex, startIndex + pageItemsCount);
     }
   },
   watch: {
@@ -131,7 +138,7 @@ export default {
       return this.settings.loadStrategy.metadata;
     }
   },
-  mixins: [PaginatorMixin],
+  mixins: [PaginatorMixin, SortingMixin],
   components: {
     TableView,
     Paginator
