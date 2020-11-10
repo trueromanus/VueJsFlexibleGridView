@@ -22,13 +22,16 @@ export default {
         },
         getPaginationPages({ pageNumber, metadata }) {
             const count = metadata.totalCount;
+            if (count === 0) {
+              this.paginationPages = [];
+              return;
+            }
+
             const pageSize = metadata.pageSize;
             const countPages = Math.ceil(count / pageSize);
             this.currentPage = pageNumber;
 
             const paginationPages = [];
-            if (!countPages) return paginationPages;
-
             const pagesBufferSize = 2;
 
             if (countPages <= pagesBufferSize * 2 + 1) {

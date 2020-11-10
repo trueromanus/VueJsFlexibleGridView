@@ -1,5 +1,15 @@
 <template>
   <div class="simple-table-container">
+    <div class="grid-view-toolbar">
+      <div></div>
+      <div>
+        <input
+          type="text"
+          v-model="searchValue"
+          @input="searchValueChanged($event)"
+        />
+      </div>
+    </div>
     <table-view
       ref="tableView"
       :settings="settings"
@@ -26,7 +36,12 @@
       <span>Page size </span>
       <div class="pagesize">
         <select v-model="selectedPageSize">
-          <option v-for="(item, index) in pageSizes" :key="index" :value="item">{{ item }}</option>
+          <option
+            v-for="(item, index) in pageSizes"
+            :key="index"
+            :value="item">
+            {{ item }}
+          </option>
         </select>
       </div>
       <div class="separator"></div>
@@ -44,6 +59,7 @@ import TableView from './TableView.vue'
 import Paginator from './Paginator.vue'
 import PaginatorMixin from '../mixins/paginatorMixin.js'
 import SortingMixin from '../mixins/sortingMixin.js'
+import FilteringMixin from '../mixins/filteringMixin.js'
 
 export default {
   name: `ClassicGridView`,
@@ -70,18 +86,63 @@ export default {
           loadPage: this.loadPage,
           pageFormatter: this.pageFormatter,
           metadata: {
-            pageSize: 10
+            pageSize: 10,
+            totalCount: 0
           }
         },
         items: []
       },
-      sortingFields: {}
+      sortingFields: {},
+      filterFields: [],
+      searchValue: ``,
+      searchTimeoutId: null
     }
   },
   created() {
     this.refreshColumns(this.columns);
   },
   methods: {
+    performFiltering() {
+      let filterFields = this.filterFields;
+      if (!this.searchValue) {
+        filterFields = [];
+      } else {
+        if (filterFields.length) {
+          const filter = filterFields[0];
+          filter.value = this.searchValue;
+        } else {
+          filterFields[0] = {
+            value: this.searchValue,
+            command: this.fullTextSearch,
+            fields: [] // in this case fields not used because performing fulltext search
+          };
+        }
+      }
+
+      this.filterFields = filterFields;
+
+      this.$refs.tableView.loadPage(1);      
+    },
+    searchValueChanged($event) {
+      //After the user type a new character in the search field it will be bad practice to immediately perform a request for filtering because it can cause performance issues for the backend.
+      //Instead will be run the timer for one second, if in this interval user types a new character in the search field it reset the timer. If the user doesn't type in any characters will be performing a request for filtering data.
+      if (this.searchTimeoutId) clearTimeout(this.searchTimeoutId);
+      
+      this.searchTimeoutId = setTimeout(
+        () => {
+          this.performFiltering($event);
+
+          this.searchTimeoutId = null;
+        },
+        1000
+      );
+    },      
+    fullTextSearch(item, fields, value) {
+      //Fields in parameters ignored because we need search on any fields.
+      const objectFields = Object.keys(item);
+
+      return objectFields.find(field => item[field] && item[field].toString().indexOf(value) > -1);
+    },
     refreshColumns(columns) {
       this.settings.columns = columns;
     },
@@ -106,12 +167,15 @@ export default {
     },
     loadPage(pageNumber, metadata) {
       let items = this.items;
-      console.log(this.sortingFields);
+      
+      if (this.filterFields.length) items = this.filteringObjectsByMultipleField(items, this.filterFields);
       if (Object.keys(this.sortingFields).length) items = this.sortingObjectByMultipleField(items, this.sortingFields);
 
       metadata.totalCount = items.length;
       const count = metadata.totalCount;
       const pageSize = metadata.pageSize;
+
+      if (count === 0) return [];
 
       const startIndex = (pageNumber - 1) * metadata.pageSize;
       const pageItemsCount = count - startIndex > pageSize ? pageSize : count - startIndex;
@@ -138,7 +202,7 @@ export default {
       return this.settings.loadStrategy.metadata;
     }
   },
-  mixins: [PaginatorMixin, SortingMixin],
+  mixins: [PaginatorMixin, SortingMixin, FilteringMixin],
   components: {
     TableView,
     Paginator
@@ -186,5 +250,11 @@ export default {
   display: flex;
   align-items: center;
   padding: 18px;
+}
+.grid-view-toolbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 </style>
