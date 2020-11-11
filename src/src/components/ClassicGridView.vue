@@ -5,6 +5,7 @@
       <div>
         <input
           type="text"
+          class="text-control"
           v-model="searchValue"
           @input="searchValueChanged($event)"
         />
@@ -121,7 +122,7 @@ export default {
 
       this.filterFields = filterFields;
 
-      this.$refs.tableView.loadPage(1);      
+      this.$refs.tableView.reload();
     },
     searchValueChanged($event) {
       //After the user type a new character in the search field it will be bad practice to immediately perform a request for filtering because it can cause performance issues for the backend.
@@ -163,7 +164,7 @@ export default {
         this.$set(this.sortingFields, columnField, { descending: false });
       }
 
-      this.$refs.tableView.loadPage(1);
+      this.$refs.tableView.reload();
     },
     loadPage(pageNumber, metadata) {
       let items = this.items;
@@ -191,7 +192,7 @@ export default {
       if (!value) return;
 
       this.settings.loadStrategy.metadata.pageSize = value;
-      this.$refs.tableView.loadPage(1);
+      this.$refs.tableView.reload();
     },
     columns(value) {      
       this.refreshColumns(value);
@@ -256,5 +257,19 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+}
+.text-control {
+  margin: 2px 0px;
+  font-size: 15px;
+  padding: 6px 4px;
+  border-color: lightgray;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 4px;
+}
+.text-control:focus {
+  outline: none;
+  border-color: lightblue;
+  border-width: 2px;
 }
 </style>

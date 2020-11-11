@@ -150,6 +150,9 @@ export default {
         cell.columnIndex === 0 ? theme.leftCellStyle : (cell.columnIndex === lastColumns ? theme.rightCellStyle : theme.middleCellStyle) 
       );
     },
+    reload() {
+      this.loadPage(1);
+    },
     async loadPage(pageNumber) {
       if (!pageNumber) pageNumber = 1;
 
