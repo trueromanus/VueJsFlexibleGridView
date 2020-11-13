@@ -25,13 +25,16 @@
           <span v-if="sortingFields[column.field].descending">&#8593;</span>
           <span v-else>&#8595;</span>
         </div>
-      </div>
-      <div
-        class="column-cell"
-        slot="commonpaddings"
+      </div>      
+      <template
+        v-for="column in columnsWithSlots"
+        :slot="column.slot"
         slot-scope="{ item }">
-        {{ item.value }}
-      </div>
+        <slot
+          :name="column.slot"
+          :item="item">
+        </slot>
+      </template>
     </table-view>
     <div class="bottomtable">
       <span>Page size </span>
@@ -82,6 +85,7 @@ export default {
       pageSizes: [5, 10, 15, 20],
       settings: {
         columns: [],
+        fillItems: this.groupsFillItems,
         isAutoLoadFirstPage: true,
         loadStrategy: {
           loadPage: this.loadPage,
@@ -103,6 +107,28 @@ export default {
     this.refreshColumns(this.columns);
   },
   methods: {
+    groupsFillItems(items, columns) {
+      const result = [];
+      let rowIndex = 0;
+      for (const item of items) {
+        let columnIndex = 0;
+        for (const column of columns) {
+          result.push(
+            {
+              value: item[column.field],
+              rowIndex,
+              columnIndex, 
+              column: column,
+              item
+            }
+          );
+          columnIndex++;
+        }
+        rowIndex++;
+      }
+
+      return result;
+    },
     performFiltering() {
       let filterFields = this.filterFields;
       if (!this.searchValue) {
@@ -201,6 +227,9 @@ export default {
   computed: {
     gridMetadata() {
       return this.settings.loadStrategy.metadata;
+    },
+    columnsWithSlots() {
+      return this.settings.columns.filter(a => a.slot);
     }
   },
   mixins: [PaginatorMixin, SortingMixin, FilteringMixin],

@@ -11,7 +11,10 @@
     <span>ClassicGridView, data can be on frontend completely. Pagination, select page size, multi sorting, multi filtering.</span>
     <classic-grid-view
       :items="items"
-      :columns="simpleColumns">
+      :columns="slotedColumns">
+
+      <div class="column-cell" slot="idslot" slot-scope="{ item }" style="color: red;">&diams;{{ item.value }}</div>
+      <div class="column-cell" slot="nameslot" slot-scope="{ item }" style="color: green;">&hearts;{{ item.value }}</div>
     </classic-grid-view>
   </div>
 </template>
@@ -348,6 +351,20 @@ export default {
           field: "name",
           slot: "commonpaddings"
         }
+      ],
+      slotedColumns: [
+        {
+          field: "id",
+          title: "Identifier",
+          actualWidth: 130,
+          columnPoints: `px`,
+          slot: "idslot"
+        },
+        {
+          title: "Name",
+          field: "name",
+          slot: "nameslot"
+        }
       ]
     }
   },
@@ -367,5 +384,10 @@ export default {
   text-align: center;
   margin-top: 60px;
   width: 500px;  
+}
+.column-cell {
+  display: flex;
+  align-items: center;
+  padding: 18px;
 }
 </style>

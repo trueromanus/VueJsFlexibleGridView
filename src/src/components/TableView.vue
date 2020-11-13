@@ -189,27 +189,11 @@ export default {
       this.settings.items = preprocess ? preprocess(result) : result;
 
       this.$emit(`pageloaded`, { pageNumber, metadata });
-    }
-  },
-  computed: {
-    visibleColumns() {
-      if (!(`columns` in this.settings)) {
-        console.warn(`Property 'columns' don't specify in settings!`);
-        return [];
-      }
-
-      return this.settings.columns;
     },
-    gridItems() {
-      if (!(`items` in this.settings)) {
-        console.warn(`Property 'items' don't specify in settings!`);
-        return [];
-      }    
-    
-      const columns = this.visibleColumns;
+    fillItems(items, columns) {
       const result = [];
       let rowIndex = 0;
-      for (const item of this.settings.items) {
+      for (const item of items) {
         let columnIndex = 0;
         for (const column of columns) {
           result.push(
@@ -227,6 +211,26 @@ export default {
       }
 
       return result;
+    }
+  },
+  computed: {
+    visibleColumns() {
+      if (!(`columns` in this.settings)) {
+        console.warn(`Property 'columns' don't specify in settings!`);
+        return [];
+      }
+
+      return this.settings.columns;
+    },
+    gridItems() {
+      if (!(`items` in this.settings)) {
+        console.warn(`Property 'items' don't specify in settings!`);
+        return [];
+      }    
+
+      const fillItemsFunction = this.settings.fillItems || this.fillItems;
+    
+      return fillItemsFunction(this.settings.items, this.visibleColumns);
     }
   }
 }
@@ -250,7 +254,7 @@ export default {
 }
 .table-grid-container {
   display: grid;
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
+  column-gap: 0px;
+  row-gap: 0px;
 }
 </style>
