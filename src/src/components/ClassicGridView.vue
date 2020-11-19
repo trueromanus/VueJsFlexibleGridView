@@ -95,10 +95,15 @@ export default {
             totalCount: 0
           }
         },
-        items: []
+        items: [],
+        groupField: `name`,
+        groupDescending: false
       },
-      sortingFields: {},
+      sortingFields: {
+        'name': { descending: false }
+      },
       filterFields: [],
+      groupKeys: new Set(),
       searchValue: ``,
       searchTimeoutId: null
     }
@@ -107,11 +112,38 @@ export default {
     this.refreshColumns(this.columns);
   },
   methods: {
+    setGroups(items) {
+      if (!this.settings.groupField) return;
+
+      this.groupKeys.clear();
+
+      const field = this.settings.groupField;
+
+      for (const item of items) this.groupKeys.add(item[field]);
+    },
     groupsFillItems(items, columns) {
+      this.setGroups(items);
+
+      const groupField = this.settings.groupField;
+      let currentGroup = null;
       const result = [];
       let rowIndex = 0;
       for (const item of items) {
         let columnIndex = 0;
+        if (currentGroup !== item[groupField]) {
+          currentGroup = item[groupField];
+          
+          result.push(
+            {
+              value: currentGroup,
+              rowIndex,
+              columnIndex, 
+              column: {}, // for compability
+              item: {} // for compability
+            }
+          );
+          continue;
+        }
         for (const column of columns) {
           result.push(
             {
