@@ -14,6 +14,7 @@
     <table-view
       ref="tableView"
       :settings="settings"
+      :theme-cell="tableViewThemeCell"
       @pageloaded="getPaginationPages($event)">
       <div
         class="column-head"
@@ -26,12 +27,22 @@
           <span v-else>&#8595;</span>
         </div>
       </div>      
+      <!-- Reassign slots for external components -->
       <template
         v-for="column in columnsWithSlots"
         :slot="column.slot"
         slot-scope="{ item }">
         <slot
           :name="column.slot"
+          :item="item">
+        </slot>
+      </template>
+      <!-- Special slot for group header -->
+      <template
+        slot="groupslot"
+        slot-scope="{ item }">
+        <slot
+          name="groupslot"
           :item="item">
         </slot>
       </template>
@@ -105,13 +116,27 @@ export default {
       filterFields: [],
       groupKeys: new Set(),
       searchValue: ``,
-      searchTimeoutId: null
+      searchTimeoutId: null,
+      tableViewThemeCell: {
+        fillCellStyle: this.fillCellStyle
+      }
     }
   },
   created() {
     this.refreshColumns(this.columns);
   },
   methods: {
+    fillCellStyle(cell, theme, styles) {     
+      const cellStyles = this.$refs.tableView.fillCellStyle(cell, theme, styles);
+      if (cell.isGroup) {
+        styles['grid-column'] = `1/-1`;
+        styles['border-right-color'] = `rgb(186, 191, 199)`;
+        styles['border-width'] = `0px 1px 1px 1px`;
+        styles['padding'] = `4px`;
+      }
+
+      return cellStyles;
+    },
     setGroups(items) {
       if (!this.settings.groupField) return;
 
@@ -138,11 +163,11 @@ export default {
               value: currentGroup,
               rowIndex,
               columnIndex, 
-              column: {}, // for compability
+              isGroup: true, // field need for determine that cell is group
+              column: { slot: `groupslot` }, // for compability, used one slot for all groups
               item: {} // for compability
             }
           );
-          continue;
         }
         for (const column of columns) {
           result.push(

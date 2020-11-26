@@ -98,7 +98,8 @@ export default {
             'border-right-color': `rgb(186, 191, 199)`,
             'border-top-color': `rgb(186, 191, 199)`
           },
-          getCellStyle: this.getCellStyle
+          getCellStyle: this.getCellStyle,
+          fillCellStyle: this.fillCellStyle
       }
     }
   },
@@ -114,7 +115,7 @@ export default {
     if (this.themeCell) {
       for (const key of Object.keys(this.themeCell)) {
         if (!(key in this.cell)) continue;
-        
+
         this.cell[key] = this.themeCell[key];
       }
     }
@@ -138,17 +139,20 @@ export default {
         index === 0 ? theme.leftCellStyle : (index === lastColumns ? theme.rightCellStyle : theme.middleCellStyle) 
       );
     },
-    getCellStyle(cell, theme) {
-      const styles = {
-        'background-color': cell.rowIndex % 2 === 0 ? `` : `rgb(252, 252, 252)`,
-      };
-
+    fillCellStyle(cell, theme, styles) {
       const lastColumns = this.visibleColumns.length - 1;
 
       return Object.assign(
         styles,
         cell.columnIndex === 0 ? theme.leftCellStyle : (cell.columnIndex === lastColumns ? theme.rightCellStyle : theme.middleCellStyle) 
       );
+    },
+    getCellStyle(cell, theme) {
+      const styles = {
+        'background-color': cell.rowIndex % 2 === 0 ? `` : `rgb(252, 252, 252)`,
+      };
+
+      return this.cell.fillCellStyle(cell, theme, styles);
     },
     reload() {
       this.loadPage(1);

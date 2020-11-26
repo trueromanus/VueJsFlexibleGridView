@@ -15,6 +15,7 @@
 
       <div class="column-cell" slot="idslot" slot-scope="{ item }" style="color: red;">&diams;{{ item.value }}</div>
       <div class="column-cell" slot="nameslot" slot-scope="{ item }" style="color: green;">&hearts;{{ item.value }}</div>
+      <div class="column-cell-group" slot="groupslot" slot-scope="{ item }"> Group: {{ item.value }} </div>
     </classic-grid-view>
   </div>
 </template>
@@ -389,5 +390,11 @@ export default {
   display: flex;
   align-items: center;
   padding: 18px;
+}
+.column-cell-group {
+  display: flex;
+  align-items: flex-start;
+  padding: 18px;
+  font-weight: bold;
 }
 </style>
