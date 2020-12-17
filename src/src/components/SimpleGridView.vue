@@ -115,7 +115,6 @@ export default {
 .simple-table-container {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
-  margin-top: 60px;
   width: 500px;  
 }
 .separator {

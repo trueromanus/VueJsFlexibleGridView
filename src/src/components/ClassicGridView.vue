@@ -86,6 +86,10 @@ export default {
     columns: {
       type: Array,
       default: () => []
+    },
+    isGrouping: {
+      type: Boolean,
+      default: () => false
     }
   },
   data() {
@@ -147,7 +151,7 @@ export default {
       for (const item of items) this.groupKeys.add(item[field]);
     },
     groupsFillItems(items, columns) {
-      this.setGroups(items);
+      if (this.isGrouping) this.setGroups(items);
 
       const groupField = this.settings.groupField;
       let currentGroup = null;
@@ -155,7 +159,8 @@ export default {
       let rowIndex = 0;
       for (const item of items) {
         let columnIndex = 0;
-        if (currentGroup !== item[groupField]) {
+        
+        if (this.isGrouping && currentGroup !== item[groupField]) {
           currentGroup = item[groupField];
           
           result.push(
@@ -169,6 +174,7 @@ export default {
             }
           );
         }
+          
         for (const column of columns) {
           result.push(
             {

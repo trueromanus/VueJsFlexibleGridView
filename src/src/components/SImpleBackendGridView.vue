@@ -39,6 +39,10 @@ export default {
     items: {
       type: Array,
       default: () => []
+    },
+    columns: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -48,20 +52,7 @@ export default {
       selectedPageSize: 5,
       pageSizes: [5, 10, 15, 20],
       settings: {
-        columns: [
-          {
-            field: "id",
-            title: "Identifier",
-            actualWidth: 100,
-            columnPoints: `px`,
-            slot: "commonpaddings"
-          },
-          {
-            title: "Name",
-            field: "title",
-            slot: "commonpaddings"
-          },
-        ],
+        columns: [],
         isAutoLoadFirstPage: true,
         loadStrategy: {
           isAsync: true,
@@ -75,7 +66,13 @@ export default {
       }
     }
   },
+  created() {
+    this.refreshColumns(this.columns);
+  },
   methods: {
+    refreshColumns(columns) {
+      this.settings.columns = columns;
+    },
     async loadPage(pageNumber, metadata) {
       const result = await fetch(`https://trueromanus.github.io/VueJsFlexibleGridView/fakeapi/page${pageNumber}.json`);
       const pageData = await result.json();
@@ -91,6 +88,9 @@ export default {
 
       this.settings.loadStrategy.metadata.pageSize = value;
       this.$refs.tableView.loadPage(1);
+    },
+    columns(value) {      
+      this.refreshColumns(value);
     }
   },
   mixins: [PaginatorMixin],
@@ -105,7 +105,6 @@ export default {
 .simple-table-container {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   text-align: center;
-  margin-top: 60px;
   width: 500px;  
 }
 .separator {

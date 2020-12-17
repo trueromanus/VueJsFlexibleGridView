@@ -1,22 +1,42 @@
 <template>
   <div id="app">
-    <span>SimpleGridView, data can be on frontend completely. Only pagination and selecting page sizes.</span>
-    <simple-grid-view
-      :items="items"
-      :columns="simpleColumns"
-    />
-    <span>SimpleBackendGridView, data loaded from backend. Only pagination and selecting page sizes.</span>
-    <simple-backend-grid-view
-    />
-    <span>ClassicGridView, data can be on frontend completely. Pagination, select page size, multi sorting, multi filtering.</span>
-    <classic-grid-view
-      :items="items"
-      :columns="slotedColumns">
+    <div class="titles-container">
+      <span class="grid-title">SimpleGridView</span>
+      <span class="data-title">Data loaded on frontend completely.</span>
+      <span class="features-title">Features: Pagination, selecting page sizes.</span>
+    </div>
+    <div class="center-grid-view">
+      <simple-grid-view
+        :items="items"
+        :columns="simpleColumns"
+      />
+    </div>
+    <div class="titles-container">
+      <span class="grid-title">SimpleBackendGridView</span>
+      <span class="data-title">Data loaded from backend.</span>
+      <span class="features-title">Features: Pagination, selecting page sizes.</span>
+    </div>
+    <div class="center-grid-view">
+      <simple-backend-grid-view
+        :columns="simpleBackendColumns"
+      />
+    </div>
+    <div class="titles-container">
+      <span class="grid-title">ClassicGridView</span>
+      <span class="data-title">Data loaded on frontend completely.</span>
+      <span class="features-title">Features: Pagination, selecting page sizes, multisorting, multifiltering, grouping, custom slots on columns.</span>
+    </div>
+    <div class="center-grid-view">
+      <classic-grid-view
+        :items="items"
+        :columns="slotedColumns"
+        :is-grouping="true">
 
-      <div class="column-cell" slot="idslot" slot-scope="{ item }" style="color: red;">&diams;{{ item.value }}</div>
-      <div class="column-cell" slot="nameslot" slot-scope="{ item }" style="color: green;">&hearts;{{ item.value }}</div>
-      <div class="column-cell-group" slot="groupslot" slot-scope="{ item }"> Group: {{ item.value }} </div>
-    </classic-grid-view>
+        <div class="column-cell" slot="idslot" slot-scope="{ item }" style="color: red;">&diams;{{ item.value }}</div>
+        <div class="column-cell" slot="nameslot" slot-scope="{ item }" style="color: green;">&hearts;{{ item.value }}</div>
+        <div class="column-cell-group" slot="groupslot" slot-scope="{ item }"> Group: {{ item.value }} </div>
+      </classic-grid-view>
+    </div>
   </div>
 </template>
 
@@ -353,6 +373,20 @@ export default {
           slot: "commonpaddings"
         }
       ],
+      simpleBackendColumns: [
+        {
+          field: "id",
+          title: "Identifier",
+          actualWidth: 130,
+          columnPoints: `px`,
+          slot: "commonpaddings"
+        },
+        {
+          title: "Title",
+          field: "title",
+          slot: "commonpaddings"
+        }
+      ],
       slotedColumns: [
         {
           field: "id",
@@ -384,7 +418,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   margin-top: 60px;
-  width: 500px;  
 }
 .column-cell {
   display: flex;
@@ -396,5 +429,28 @@ export default {
   align-items: flex-start;
   padding: 18px;
   font-weight: bold;
+}
+.center-grid-view {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.titles-container {
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.grid-title {
+  font-size: 20px;
+  color: #1a73e8;
+}
+.data-title {
+  font-size: 16px;
+}
+.features-title {
+  font-size: 14px;
 }
 </style>
